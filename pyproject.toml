@@ -1,14 +1,23 @@
 [tool.poetry]
 name = "kml-16s-2"
 version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+description = "KM DJH 16S 分析流程"
+authors = ["Kristoff <kr1stoff7m@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.8"
 
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[[tool.poetry.source]]
+name = "aliyun"
+url = "https://mirrors.aliyun.com/pypi/simple"
+priority = "default"
+
+[[tool.poetry.source]]
+name = "tsinghua"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
+priority = "primary"
