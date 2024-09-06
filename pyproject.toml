@@ -6,7 +6,9 @@ authors = ["Kristoff <kr1stoff7m@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.10"
+pyyaml = "^6.0.2"
+pandas = "^2.2.2"
 
 [build-system]
 requires = ["poetry-core"]
@@ -15,9 +17,9 @@ build-backend = "poetry.core.masonry.api"
 [[tool.poetry.source]]
 name = "aliyun"
 url = "https://mirrors.aliyun.com/pypi/simple"
-priority = "default"
+priority = "primary"
 
 [[tool.poetry.source]]
 name = "tsinghua"
 url = "https://pypi.tuna.tsinghua.edu.cn/simple/"
-priority = "primary"
+priority = "supplemental"

@@ -1,0 +1,6 @@
+basic: basic
+# 已包含 qiime2 + picrust2
+qiime2: qiime2-2023.2
+lefse: LefSe
+microplot: microplot
+graphlan: graphlan
