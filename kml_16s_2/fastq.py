@@ -11,7 +11,7 @@ def prepare_fastq_by_sample_table(workdir, sample_table: str) -> None:
     - 如果未压缩 link, 如果压缩 zcat
     - 支持 .tsv 和 .xlsx 格式
     :param workdir:         工作目录
-    :param sample_table:     样本信息表 SampleSheet
+    :param sample_table:     样本信息表 SampleSheet. [name	group	fastq1	fastq2]
     :return:
     """
     logging.info('在项目目录下面准备 fastq 文件')
@@ -22,7 +22,7 @@ def prepare_fastq_by_sample_table(workdir, sample_table: str) -> None:
 
     # 软链接或解压
     for row in df.iterrows():
-        name, fastq1, fastq2 = row[1]
+        name, group, fastq1, fastq2 = row[1]
         copy_fastq(workdir, name, fastq1, fastq2)
 
 
@@ -40,14 +40,13 @@ def get_names_by_sample_table(sample_table: str) -> list:
 def sample_table_to_dataframe(sample_table: str) -> pd.DataFrame:
     """
     输入 SampleSheet 转成 DataFrame 格式
-
     :param sample_table:
     :return df: SampleSheet 转的 DataFrame
     """
     if sample_table.endswith('.xlsx'):
-        df = pd.read_excel(sample_table, header=None)
+        df = pd.read_excel(sample_table)
     elif sample_table.endswith('.tsv'):
-        df = pd.read_table(sample_table, sep='\t', header=None)
+        df = pd.read_table(sample_table, sep='\t')
     else:
         raise ValueError(f'sample_table 扩展名必须是 .xlsx or .tsv : {sample_table}')
 
@@ -85,11 +84,12 @@ def check_sample_table(df) -> None:
     :param df:
     """
     for row in df.iterrows():
-        name, fastq1, fastq2 = row[1]
+        name, group, fastq1, fastq2 = row[1]
 
         # 检查名称
         pattern = r'[\\/:*?"<>| ]'
         assert not re.search(pattern, name), f'样本名称含有非法字符 (\\/:*?"<>| ) : {name}'
+        assert not re.search(pattern, group), f'分组名称含有非法字符 (\\/:*?"<>| ) : {name}'
 
         # 检查 fastq 是否存在
         assert Path(fastq1).exists(), f'fastq1 不存在 : {fastq1}'
