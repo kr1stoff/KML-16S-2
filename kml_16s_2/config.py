@@ -26,8 +26,13 @@ def get_threads_dict() -> dict:
     """
     logging.info('获取线程数字典')
     max_threads = os.cpu_count()
-    high_threads = math.ceil(max_threads * 2 / 3)
+    high_threads = max_threads
     low_threads = math.floor(high_threads / 4)
     dict_thr = {'high': high_threads, 'low': low_threads}
 
     return dict_thr
+
+
+def get_my_scripts_path() -> str:
+    logging.info('获取 scripts 目录地址')
+    return str(Path(__file__).resolve().parents[1].joinpath('scripts'))

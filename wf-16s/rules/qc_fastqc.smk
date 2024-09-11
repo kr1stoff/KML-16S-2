@@ -13,6 +13,4 @@ rule fastqc:
     threads:
         config['threads']['low']
     shell:
-        """
-        fastqc {input.fq} -o {config[DirTree][QC]}/fastqc -t {threads} --extract &> {log}
-        """
+        'mkdir {output} && fastqc {input} -o {output} -t {threads} --extract &> {log}'

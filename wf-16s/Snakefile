@@ -1,5 +1,37 @@
 ######## Config ########
-workdir: config["workdir"]
+workdir: config['workdir']
 
-shell.executable("/bin/bash")
-shell.prefix("set +eu; ")
+shell.executable('/bin/bash')
+shell.prefix('set +eu; ')
+
+
+rule all:
+    input:
+        # qc
+        'qc/fastp/fastp.stats.xls',
+        'qc/multiqc',
+        # dada2
+        'dada2/table_v',
+        'dada2/stats',
+        'dada2/stats_v',
+        'dada2/rep-seqs_v',
+        # phylogeny
+        'phylogeny/rooted-tree.rectangular.png',
+        'phylogeny/rooted-tree.rectangular.pdf',
+        'phylogeny/rooted-tree.circular.png',
+        'phylogeny/rooted-tree.circular.pdf',
+        'phylogeny/unrooted-tree',
+        'phylogeny/masked-aligned-rep-seqs',
+        'phylogeny/aligned-rep-seqs',
+        # diversity
+        'diversity/sample_depth_info.json',
+        'diversity/rarefied_table_freq/feature-table.tsv'
+
+
+include: 'rules/qc_fastqc.smk'
+include: 'rules/qc_multiqc.smk'
+include: 'rules/qc_fastp.smk'
+include: 'rules/feature_fq_import.smk'
+include: 'rules/feature_dada2.smk'
+include: 'rules/feature_phylogeny.smk'
+include: 'rules/diversity_core_metrics.smk'

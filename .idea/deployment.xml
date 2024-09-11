@@ -7,6 +7,10 @@
           <mappings>
             <mapping deploy="KML-16S-2" local="$PROJECT_DIR$" web="/" />
           </mappings>
+          <excludedPaths>
+            <excludedPath path="/KML-16S-2/.pytest_cache" />
+            <excludedPath path="/KML-16S-2/poetry.lock" />
+          </excludedPaths>
         </serverdata>
       </paths>
     </serverData>

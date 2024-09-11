@@ -17,13 +17,27 @@ def prepare_fastq_by_sample_table(workdir, sample_table: str) -> None:
     logging.info('在项目目录下面准备 fastq 文件')
     # 创建 {workdir}/.rawdata
     Path(workdir).joinpath('.rawdata').mkdir(exist_ok=True, parents=True)
-
     df = sample_table_to_dataframe(sample_table)
 
     # 软链接或解压
     for row in df.iterrows():
         name, group, fastq1, fastq2 = row[1]
         copy_fastq(workdir, name, fastq1, fastq2)
+
+
+def generata_metadata_table(workdir, sample_table: str) -> None:
+    """
+    生成 metadata.tsv 信息文件
+    :param workdir:
+    :param sample_table:
+    :return:
+    """
+    logging.info('生成 metadata.tsv 信息文件')
+    dir_temp = Path(workdir).joinpath('.temp')
+    dir_temp.mkdir(exist_ok=True, parents=True)
+    df = sample_table_to_dataframe(sample_table)[['name', 'group']]
+    df.rename(columns={'name': 'sample-id'}, inplace=True)
+    df.to_csv(dir_temp.joinpath('metadata.tsv'), sep='\t', index=False)
 
 
 def get_names_by_sample_table(sample_table: str) -> list:

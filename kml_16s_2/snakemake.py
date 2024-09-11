@@ -4,6 +4,7 @@ from subprocess import run
 import logging
 from kml_16s_2 import get_conda_env_dict
 from kml_16s_2 import get_threads_dict
+from kml_16s_2 import get_my_scripts_path
 
 
 def create_snakemake_configfile(sample_names, workdir):
@@ -22,6 +23,8 @@ def create_snakemake_configfile(sample_names, workdir):
         'samples': sample_names,
         'threads': get_threads_dict(),
         'conda': get_conda_env_dict(),
+        'my_scripts': get_my_scripts_path(),
+        'metadata': f'{workdir}/.temp/metadata.tsv'
     }
 
     with open(f'{workdir}/.temp/snakemake.yaml', 'w') as f:

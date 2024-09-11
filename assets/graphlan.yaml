@@ -1,9 +1,0 @@
-name: graphlan
-channels:
-  - bioconda
-  - conda-forge
-  - default
-dependencies:
-  - graphlan
-  - export2graphlan
-  - hclust2
