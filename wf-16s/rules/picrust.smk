@@ -15,11 +15,11 @@ rule picrust2_pipeline:
         config['conda']['qiime2']
     shell:
         """
-        grep -v "^# Constructed from biom file" {input.otu_tsv} > picrust2.otu.input 2> {log}
+        grep -v "^# Constructed from biom file" {input.otu_tsv} > {output.pdir}/picrust2.otu.input 2> {log}
         if [ -d "{output.pdir}" ];then
             rm -rf {output.pdir}
         fi
-        picrust2_pipeline.py -s {input.seqs_fa} -i picrust2.otu.input \
+        picrust2_pipeline.py -s {input.seqs_fa} -i {output.pdir}/picrust2.otu.input \
             -o {output.pdir} -p {threads} >> {log} 2>&1
         gunzip -dc {output.pdir}/pathways_out/path_abun_unstrat.tsv.gz > {output.pathway_tsv} 2>> {log}
         """
