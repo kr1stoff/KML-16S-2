@@ -71,6 +71,20 @@ rule all:
         'diversity/beta_UPGMA',
         'diversity/beta_heatmap',
         'diversity/beta_Adonis',
+        # diff
+        'diff/Venn/otu',
+        'diff/PCA/otu',
+        'diff/PLS-DA/otu',
+        'diff/OPLS-DA/otu',
+        'diff/PLS-DA/Species',
+        'diff/OPLS-DA/Species',
+        expand('diff/Venn/{levels}',levels=['Family', 'Genus', 'Species']),
+        expand('diff/PCA/{levels}',levels=['Family', 'Genus', 'Species']),
+        'diff/RandomForest',
+        'diff/Lefse',
+        # function
+        'function/picrust2_plot',
+        'function/picrust2_out'
 
 
 include: 'rules/qc_fastqc.smk'
@@ -85,3 +99,5 @@ include: 'rules/diversity_alpha_rarefaction.smk'
 include: 'rules/diversity_alpha.smk'
 include: 'rules/diversity_beta.smk'
 include: 'rules/diversity_plots.smk'
+include: 'rules/diff_plot.smk'
+include: 'rules/picrust.smk'
