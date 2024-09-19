@@ -29,6 +29,16 @@ def get_database_dict() -> dict:
     return dict_database
 
 
+def get_software_dict() -> dict:
+    logging.info('获取软件字典')
+    yaml_software = Path(__file__).resolve().parents[1].joinpath('config/software.yaml')
+
+    with open(yaml_software) as f:
+        dict_soft = yaml.safe_load(f)
+
+    return dict_soft
+
+
 def get_threads_dict() -> dict:
     """
     获取最大线程数, 高线程分配为 max * 2 / 3, 低线程为 high / 2
