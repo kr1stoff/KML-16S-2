@@ -60,3 +60,28 @@ rule demux_summary_export:
             --input-path {input} \
             --output-path {output} > {log} 2>&1
         """
+
+
+rule demux_images:
+    input:
+        rules.demux_summary_export.output
+    output:
+        bplot_img_forward='qc/demux/demultiplex-summary-forward.png',
+        bplot_img_reverse='qc/demux/demultiplex-summary-reverse.png',
+        qplot_img_forward='qc/demux/quality-forward.png',
+        qplot_img_reverse='qc/demux/quality-reverse.png'
+    benchmark:
+        '.log/fq/demux_images.bm'
+    log:
+        '.log/fq/demux_images.log'
+    conda:
+        config['conda']["microplot"]
+    shell:
+        """
+        cp {input}/demultiplex-summary-forward.png {output.bplot_img_forward}
+        cp {input}/demultiplex-summary-reverse.png {output.bplot_img_reverse}
+        # 缺包报错 libproviders.so : https://stackoverflow.com/questions/73004195/phantomjs-wont-install-autoconfiguration-error
+        export OPENSSL_CONF=/dev/null
+        phantomjs {config[my_scripts]}/snapshot_qiime2_demux_qplot_left.js  {input}/quality-plot.html {output.qplot_img_forward} 2>> {log}
+        phantomjs {config[my_scripts]}/snapshot_qiime2_demux_qplot_right.js {input}/quality-plot.html {output.qplot_img_reverse} 2>> {log}
+        """

@@ -19,6 +19,16 @@ def get_conda_env_dict() -> dict:
     return dict_conda_env
 
 
+def get_database_dict() -> dict:
+    logging.info('获取数据库字典')
+    yaml_database = Path(__file__).resolve().parents[1].joinpath('config/database.yaml')
+
+    with open(yaml_database) as f:
+        dict_database = yaml.safe_load(f)
+
+    return dict_database
+
+
 def get_threads_dict() -> dict:
     """
     获取最大线程数, 高线程分配为 max * 2 / 3, 低线程为 high / 2

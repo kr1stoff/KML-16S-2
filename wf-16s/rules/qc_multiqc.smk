@@ -1,6 +1,6 @@
 rule multiqc:
     input:
-        expand('qc/fastqc/{sample}', sample=config["samples"]),
+        expand('qc/fastqc/{sample}', sample=config['samples'])
     output:
         directory('qc/multiqc')
     benchmark:

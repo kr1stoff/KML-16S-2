@@ -71,8 +71,7 @@ rule diversity_core_export:
     input:
         rules.diversity_core.output.metrics_dir
     output:
-        rarefied_table_tsv='feature/rarefied_table/feature-table.tsv',
-        doneflag=touch('diversity/core-metrics/.export.done')
+        'feature/rarefied_table/feature-table.tsv'
     benchmark:
         '.log/diversity/diversity_core_export.bm'
     log:
@@ -88,9 +87,9 @@ rule diversity_core_export:
             echo "qiime tools export  --input-path $artifact --output-path ${{artifact%.*}}"
         done | parallel -j {threads} > {log} 2>&1
 
-        #把抽平后的rarefied_table/feature-table.biom 转换为tsv
+        # 把抽平后的 rarefied_table/feature-table.biom 转换为 tsv
         biom convert -i {input}/rarefied_table/feature-table.biom \
-            -o {output.rarefied_table_tsv} --to-tsv >> {log} 2>&1
+            -o {output} --to-tsv >> {log} 2>&1
         """
 
 
@@ -98,13 +97,13 @@ rule diversity_rarefied_table_freq:
     input:
         rules.diversity_core.output.rarefied_table
     output:
-        rarefied_table_freq='diversity/rarefied_table_freq.qza',
-        rarefied_table_freq_dir=directory('diversity/rarefied_table_freq_dir'),
-        rarefied_table_freq_tsv='diversity/rarefied_table_freq/feature-table.tsv'
+        rarefied_table_freq='feature/rarefied_table_freq.qza',
+        rarefied_table_freq_dir=directory('feature/rarefied_table_freq_dir'),
+        rarefied_table_freq_tsv='feature/rarefied_table_freq/feature-table.tsv'
     benchmark:
-        '.log/diversity/diversity_core_export.bm'
+        '.log/feature/diversity_core_export.bm'
     log:
-        '.log/diversity/diversity_core_export.log'
+        '.log/feature/diversity_core_export.log'
     conda:
         config['conda']['qiime2']
     shell:

@@ -2,9 +2,9 @@ rule qiime2_dada2:
     input:
         rules.qiime2_fq_import.output.demux_qza
     output:
-        stats='dada2/stats.qza',
-        table='dada2/raw-table.qza',
-        rep_seqs='dada2/raw-rep-seqs.qza'
+        stats='feature/dada2/stats.qza',
+        table='feature/dada2/raw-table.qza',
+        rep_seqs='feature/dada2/raw-rep-seqs.qza'
     benchmark:
         '.log/dada2/qiime2_dada2.bm'
     log:
@@ -31,11 +31,11 @@ rule dada2_rename_table:
     input:
         rules.qiime2_dada2.output.table
     output:
-        table_dir=directory('dada2/raw-table'),
-        tsv='dada2/raw-table/feature-table.tsv',
-        re_tsv='dada2/table/feature-table.tsv',
-        re_biom='dada2/raw-table/rename.feature-table.biom',
-        re_table='dada2/table.qza'
+        table_dir=directory('feature/dada2/raw-table'),
+        tsv='feature/dada2/raw-table/feature-table.tsv',
+        re_tsv='feature/dada2/table/feature-table.tsv',
+        re_biom='feature/dada2/raw-table/rename.feature-table.biom',
+        re_table='feature/dada2/table.qza'
     benchmark:
         '.log/dada2/dada2_rename_table.bm'
     log:
@@ -73,9 +73,9 @@ rule dada2_table_freq:
     input:
         rules.dada2_rename_table.output.re_table
     output:
-        table_freq="dada2/table_freq.qza",
-        table_freq_dir=directory("dada2/table_freq"),
-        table_freq_tsv="dada2/table_freq/feature-table.tsv"
+        table_freq='feature/dada2/table_freq.qza',
+        table_freq_dir=directory('feature/dada2/table_freq'),
+        table_freq_tsv='feature/dada2/table_freq/feature-table.tsv'
     benchmark:
         '.log/dada2/dada2_table_freq.bm'
     log:
@@ -101,9 +101,9 @@ rule dada2_rename_rep_seqs:
     input:
         rules.qiime2_dada2.output.rep_seqs
     output:
-        rep_seqs_dir=directory('dada2/raw-rep-seqs'),
-        re_rep_seqs_fa='dada2/rep-seqs/dna-sequences.fasta',
-        re_rep_seqs='dada2/rep-seqs.qza'
+        rep_seqs_dir=directory('feature/dada2/raw-rep-seqs'),
+        re_rep_seqs_fa='feature/dada2/rep-seqs/dna-sequences.fasta',
+        re_rep_seqs='feature/dada2/rep-seqs.qza'
     benchmark:
         '.log/dada2/dada2_rename_rep_seqs.bm'
     log:
@@ -136,7 +136,7 @@ use rule demux_summary_export as stats_export with:
     input:
         rules.qiime2_dada2.output.stats
     output:
-        directory('dada2/stats')
+        directory('feature/dada2/stats')
     benchmark:
         '.log/dada2/stats_export.bm'
     log:
@@ -147,7 +147,7 @@ rule stats_visual:
     input:
         rules.qiime2_dada2.output.stats
     output:
-        'dada2/stats.qzv'
+        'feature/dada2/stats.qzv'
     benchmark:
         '.log/dada2/stats_visual.bm'
     log:
@@ -166,7 +166,7 @@ use rule demux_summary_export as stats_visual_export with:
     input:
         rules.stats_visual.output
     output:
-        directory('dada2/stats_v')
+        directory('feature/dada2/stats_v')
     benchmark:
         '.log/dada2/stats_visual_export.bm'
     log:
@@ -177,7 +177,7 @@ rule rep_seqs_visual:
     input:
         rules.dada2_rename_rep_seqs.output.re_rep_seqs
     output:
-        'dada2/rep-seqs.qzv'
+        'feature/dada2/rep-seqs.qzv'
     benchmark:
         '.log/dada2/rep_seqs_visual.bm'
     log:
@@ -196,7 +196,7 @@ use rule demux_summary_export as rep_seqs_visual_export with:
     input:
         rules.rep_seqs_visual.output
     output:
-        directory('dada2/rep-seqs_v')
+        directory('feature/dada2/rep-seqs_v')
     benchmark:
         '.log/dada2/rep_seqs_visual_export.bm'
     log:
@@ -207,7 +207,7 @@ rule table_visual:
     input:
         rules.dada2_rename_table.output.re_table
     output:
-        'dada2/table.qzv'
+        'feature/dada2/table.qzv'
     benchmark:
         '.log/dada2/table_visual.bm'
     log:
@@ -229,7 +229,7 @@ use rule demux_summary_export as table_visual_export with:
     input:
         rules.table_visual.output
     output:
-        directory('dada2/table_v')
+        directory('feature/dada2/table_v')
     benchmark:
         '.log/dada2/table_visual_export.bm'
     log:

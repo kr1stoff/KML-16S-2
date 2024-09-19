@@ -10,22 +10,67 @@ rule all:
         # qc
         'qc/fastp/fastp.stats.xls',
         'qc/multiqc',
-        # dada2
-        'dada2/table_v',
-        'dada2/stats',
-        'dada2/stats_v',
-        'dada2/rep-seqs_v',
-        # phylogeny
-        'phylogeny/rooted-tree.rectangular.png',
-        'phylogeny/rooted-tree.rectangular.pdf',
-        'phylogeny/rooted-tree.circular.png',
-        'phylogeny/rooted-tree.circular.pdf',
-        'phylogeny/unrooted-tree',
-        'phylogeny/masked-aligned-rep-seqs',
-        'phylogeny/aligned-rep-seqs',
+        'qc/demux/demultiplex-summary-forward.png',
+        'qc/demux/demultiplex-summary-reverse.png',
+        'qc/demux/quality-forward.png',
+        'qc/demux/quality-reverse.png',
+        # feature
+        'feature/demux.qza',
+        'feature/demux.qzv',
+        'feature/demux_v',
+        'feature/dada2/stats',
+        'feature/dada2/rep-seqs/dna-sequences.fasta',
+        'feature/dada2/table/feature-table.tsv',
+        'feature/dada2/table_freq/feature-table.tsv',
+        'feature/rarefied_table/feature-table.tsv',
+        'feature/rarefied_table_freq/feature-table.tsv',
+        'feature/phylogeny/rooted-tree.rectangular.png',
+        'feature/phylogeny/rooted-tree.rectangular.pdf',
+        'feature/phylogeny/rooted-tree.circular.png',
+        'feature/phylogeny/rooted-tree.circular.pdf',
+        'feature/phylogeny/unrooted-tree',
+        'feature/phylogeny/masked-aligned-rep-seqs',
+        'feature/phylogeny/aligned-rep-seqs',
+        # taxa
+        'taxa/taxonomy.qzv',
+        'taxa/taxonomy',
+        'taxa/taxonomy_v',
+        'taxa/taxonomy_barplot.qzv',
+        'taxa/taxonomy_barplot_v',
+        expand('taxa/barplot/{levels}',levels=['Kingdom', 'Phylum', 'Class', 'Order', 'Family', 'Genus', 'Species']),
+        expand('taxa/collapse/{levels}/feature-table.tsv',levels=['Kingdom', 'Phylum', 'Class', 'Order', 'Family',
+                                                                  'Genus', 'Species']),
+        expand('taxa/collapse_freq/{levels}/feature-table.tsv',levels=['Kingdom', 'Phylum', 'Class', 'Order', 'Family',
+                                                                       'Genus', 'Species']),
+        expand('taxa/heatmap_hclust2/{levels}.hclust2.txt',levels=['Phylum', 'Class', 'Order', 'Family', 'Genus',
+                                                                   'Species']),
+        expand('taxa/heatmap_hclust2/{levels}.hclust2.png',levels=['Phylum', 'Class', 'Order', 'Family', 'Genus',
+                                                                   'Species']),
+        expand('taxa/graphlan/{levels}.graphlan.png',levels=['Kingdom', 'Phylum', 'Class', 'Order', 'Family', 'Genus',
+                                                             'Species']),
+        expand('taxa/krona/{sample}.krona.Species.txt',sample=config['samples']),
+        expand('taxa/krona/{sample}.krona.Species.html',sample=config['samples']),
+        expand('taxa/krona/{sample}.krona.Species.pdf',sample=config['samples']),
+        expand('taxa/krona/{sample}.krona.Species.png',sample=config['samples']),
         # diversity
-        'diversity/sample_depth_info.json',
-        'diversity/rarefied_table_freq/feature-table.tsv'
+        'diversity/alpha-rarefaction.qzv',
+        'diversity/alpha-rarefaction',
+        expand('diversity/alpha/pmetric.{p_metric}.qza',
+            p_metric=['ace', 'chao1', 'simpson', 'shannon', 'goods_coverage', 'observed_features']),
+        expand('diversity/alpha/pmetric.{p_metric}',
+            p_metric=['ace', 'chao1', 'simpson', 'shannon', 'goods_coverage', 'observed_features']),
+        'diversity/alpha_diversity_stats.tsv',
+        expand('diversity/beta/pmetric.{p_metric}.qza',p_metric=['braycurtis', 'jaccard', 'euclidean']),
+        expand('diversity/beta/pmetric.{p_metric}',p_metric=['braycurtis', 'jaccard', 'euclidean']),
+        'diversity/alpha_rare_curve',
+        'diversity/alpha_specaccum/specaccum.png',
+        'diversity/alpha_specaccum/specaccum.pdf',
+        'diversity/alpha_rank_abundance_curve',
+        'diversity/beta_PCOA',
+        'diversity/beta_NMDS',
+        'diversity/beta_UPGMA',
+        'diversity/beta_heatmap',
+        'diversity/beta_Adonis',
 
 
 include: 'rules/qc_fastqc.smk'
@@ -35,3 +80,8 @@ include: 'rules/feature_fq_import.smk'
 include: 'rules/feature_dada2.smk'
 include: 'rules/feature_phylogeny.smk'
 include: 'rules/diversity_core_metrics.smk'
+include: 'rules/taxa.smk'
+include: 'rules/diversity_alpha_rarefaction.smk'
+include: 'rules/diversity_alpha.smk'
+include: 'rules/diversity_beta.smk'
+include: 'rules/diversity_plots.smk'

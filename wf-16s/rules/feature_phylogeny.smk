@@ -2,10 +2,10 @@ rule phylogeny:
     input:
         rules.dada2_rename_rep_seqs.output.re_rep_seqs
     output:
-        aligned_rep_seqs='phylogeny/aligned-rep-seqs.qza',
-        masked_aligned_rep_seqs='phylogeny/masked-aligned-rep-seqs.qza',
-        unrooted_tree='phylogeny/unrooted-tree.qza',
-        rooted_tree='phylogeny/rooted-tree.qza'
+        aligned_rep_seqs='feature/phylogeny/aligned-rep-seqs.qza',
+        masked_aligned_rep_seqs='feature/phylogeny/masked-aligned-rep-seqs.qza',
+        unrooted_tree='feature/phylogeny/unrooted-tree.qza',
+        rooted_tree='feature/phylogeny/rooted-tree.qza'
     benchmark:
         '.log/phylogeny/phylogeny.bm'
     log:
@@ -27,7 +27,7 @@ use rule demux_summary_export as phylogeny_aligned_repseqs_export with:
     input:
         rules.phylogeny.output.aligned_rep_seqs
     output:
-        directory('phylogeny/aligned-rep-seqs')
+        directory('feature/phylogeny/aligned-rep-seqs')
     benchmark:
         '.log/phylogeny/phylogeny_aligned_repseqs_export.bm'
     log:
@@ -38,7 +38,7 @@ use rule demux_summary_export as phylogeny_masked_aligned_repseqs_export with:
     input:
         rules.phylogeny.output.masked_aligned_rep_seqs
     output:
-        directory('phylogeny/masked-aligned-rep-seqs')
+        directory('feature/phylogeny/masked-aligned-rep-seqs')
     benchmark:
         '.log/phylogeny/phylogeny_masked_aligned_repseqs_export.bm'
     log:
@@ -49,7 +49,7 @@ use rule demux_summary_export as phylogeny_unrooted_tree_export with:
     input:
         rules.phylogeny.output.unrooted_tree
     output:
-        directory('phylogeny/unrooted-tree')
+        directory('feature/phylogeny/unrooted-tree')
     benchmark:
         '.log/phylogeny/phylogeny_unrooted_tree_export.bm'
     log:
@@ -60,7 +60,7 @@ use rule demux_summary_export as phylogeny_rooted_tree_export with:
     input:
         rules.phylogeny.output.rooted_tree
     output:
-        directory('phylogeny/rooted-tree')
+        directory('feature/phylogeny/rooted-tree')
     benchmark:
         '.log/phylogeny/phylogeny_rooted_tree_export.bm'
     log:
@@ -71,7 +71,7 @@ rule phylogeny_treeplot:
     input:
         rules.phylogeny_rooted_tree_export.output
     output:
-        'phylogeny/rooted-tree.{layout}.{suffix}'
+        'feature/phylogeny/rooted-tree.{layout}.{suffix}'
     benchmark:
         '.log/phylogeny/rooted-tree.{layout}.{suffix}.bm'
     log:
