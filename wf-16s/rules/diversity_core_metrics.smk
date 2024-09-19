@@ -52,7 +52,7 @@ rule diversity_core:
         '--m-metadata-file ' + config['metadata']
     shell:
         """
-        depth=$(cat {input.selected_depth}| cut -f 2)
+        depth=$(cat {input.selected_depth} | cut -f 2)
 
         qiime diversity core-metrics-phylogenetic \
             --i-phylogeny {input.tree} \

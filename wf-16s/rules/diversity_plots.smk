@@ -56,7 +56,8 @@ rule plot_beta_PCOA:
         asv_tsv=rules.diversity_core_export.output,
         species_tsv='taxa/collapse/Species/feature-table.tsv',
         genus_tsv='taxa/collapse/Genus/feature-table.tsv',
-        family_tsv='taxa/collapse/Family/feature-table.tsv'
+        family_tsv='taxa/collapse/Family/feature-table.tsv',
+        core_dir=rules.diversity_core.output.metrics_dir
     output:
         directory('diversity/beta_PCOA')
     benchmark:
@@ -66,22 +67,21 @@ rule plot_beta_PCOA:
     conda:
         config['conda']['microplot']
     params:
-        metadata=config['metadata'],
-        core_dir='diversity/core-metrics'
+        metadata=config['metadata']
     shell:
         """
         mkdir -p {output}
         Rscript {config[my_scripts]}/beta_PCOA_by_matrix.R {params.metadata} {input.asv_tsv} \
-            {params.core_dir}/bray_curtis_distance_matrix/distance-matrix.tsv group bray {output}/beta_PCOA.ASV.bray \
+            {input.core_dir}/bray_curtis_distance_matrix/distance-matrix.tsv group bray {output}/beta_PCOA.ASV.bray \
             2>> {log}
         Rscript {config[my_scripts]}/beta_PCOA_by_matrix.R {params.metadata} {input.asv_tsv} \
-            {params.core_dir}/jaccard_distance_matrix/distance-matrix.tsv group jaccard {output}/beta_PCOA.ASV.jaccard \
+            {input.core_dir}/jaccard_distance_matrix/distance-matrix.tsv group jaccard {output}/beta_PCOA.ASV.jaccard \
             2>> {log}
         Rscript {config[my_scripts]}/beta_PCOA_by_matrix.R {params.metadata} {input.asv_tsv} \
-            {params.core_dir}/weighted_unifrac_distance_matrix/distance-matrix.tsv group euclidean {output}/beta_PCOA.ASV.weighted_unifrac \
+            {input.core_dir}/weighted_unifrac_distance_matrix/distance-matrix.tsv group euclidean {output}/beta_PCOA.ASV.weighted_unifrac \
             2>> {log}
         Rscript {config[my_scripts]}/beta_PCOA_by_matrix.R {params.metadata} {input.asv_tsv} \
-            {params.core_dir}/unweighted_unifrac_distance_matrix/distance-matrix.tsv group manhattan {output}/beta_PCOA.ASV.unweighted_unifrac \
+            {input.core_dir}/unweighted_unifrac_distance_matrix/distance-matrix.tsv group manhattan {output}/beta_PCOA.ASV.unweighted_unifrac \
             2>> {log}
         Rscript {config[my_scripts]}/beta_PCOA_by_matrix.R {params.metadata} \
             taxa/collapse/Species/feature-table.tsv none group bray {output}/beta_PCOA.Species.bray \
@@ -98,6 +98,9 @@ rule plot_beta_PCOA:
 rule plot_beta_NMDS:
     input:
         rules.select_sampling_depth.output.re_metadata,
+        rules.diversity_core.output.metrics_dir,
+        # 需要确保该 rule 先完成
+        rules.diversity_core_export.output
     output:
         directory('diversity/beta_NMDS')
     benchmark:
@@ -108,22 +111,22 @@ rule plot_beta_NMDS:
         config['threads']['low']
     conda:
         config['conda']['microplot']
-    params:
-        core_dir='diversity/core-metrics'
     shell:
         """
         mkdir -p {output}
         for method in bray_curtis jaccard unweighted_unifrac weighted_unifrac
         do
-            echo "Rscript {config[my_scripts]}/beta_NMDS.R {input} \
-                   {params.core_dir}/${{method}}_distance_matrix/distance-matrix.tsv group {output}/${{method}}.group"
+            echo "Rscript {config[my_scripts]}/beta_NMDS.R {input[0]} \
+                   {input[1]}/${{method}}_distance_matrix/distance-matrix.tsv group {output}/${{method}}.group"
         done | parallel -j {threads} > {log} 2>&1
         """
 
 
 rule plot_beta_UPGMA:
     input:
-        rules.select_sampling_depth.output.re_metadata
+        rules.select_sampling_depth.output.re_metadata,
+        rules.diversity_core.output.metrics_dir,
+        rules.diversity_core_export.output
     output:
         directory('diversity/beta_UPGMA')
     benchmark:
@@ -134,22 +137,22 @@ rule plot_beta_UPGMA:
         config['threads']['low']
     conda:
         config['conda']['microplot']
-    params:
-        core_dir='diversity/core-metrics'
     shell:
         """
         mkdir -p {output}
         for method in bray_curtis jaccard unweighted_unifrac weighted_unifrac
         do
-            echo "Rscript {config[my_scripts]}/beta_UPGMA.R {params.core_dir}/${{method}}_distance_matrix/distance-matrix.tsv \
-                {input} group {output}/${{method}}.group"
+            echo "Rscript {config[my_scripts]}/beta_UPGMA.R {input[1]}/${{method}}_distance_matrix/distance-matrix.tsv \
+                {input[0]} group {output}/${{method}}.group"
         done | parallel -j {threads} > {log} 2>&1
         """
 
 
 rule plot_beta_heatmap:
     input:
-        rules.select_sampling_depth.output.re_metadata
+        rules.select_sampling_depth.output.re_metadata,
+        rules.diversity_core.output.metrics_dir,
+        rules.diversity_core_export.output
     output:
         directory('diversity/beta_heatmap')
     benchmark:
@@ -160,17 +163,15 @@ rule plot_beta_heatmap:
         config['threads']['low']
     conda:
         config['conda']['microplot']
-    params:
-        core_dir='diversity/core-metrics'
     shell:
         """
         mkdir -p {output}
         for method in bray_curtis jaccard unweighted_unifrac weighted_unifrac
         do
-            echo "Rscript {config[my_scripts]}/beta_heatmap.R {params.core_dir}//${{method}}_distance_matrix/distance-matrix.tsv \
-                {input} group {output}/${{method}}.group.pdf"
-            echo "Rscript {config[my_scripts]}/beta_heatmap.R {params.core_dir}//${{method}}_distance_matrix/distance-matrix.tsv \
-                {input} group {output}/${{method}}.group.png"
+            echo "Rscript {config[my_scripts]}/beta_heatmap.R {input[1]}/${{method}}_distance_matrix/distance-matrix.tsv \
+                {input[0]} group {output}/${{method}}.group.pdf"
+            echo "Rscript {config[my_scripts]}/beta_heatmap.R {input[1]}/${{method}}_distance_matrix/distance-matrix.tsv \
+                {input[0]} group {output}/${{method}}.group.png"
         done | parallel -j {threads} > {log} 2>&1
         """
 
