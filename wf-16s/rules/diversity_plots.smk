@@ -193,7 +193,7 @@ rule beta_Adonis:
         mkdir -p {output}
         Rscript {config[my_scripts]}/beta_Adonis.R {input.otu_tsv} {input.metadata} {output}/beta_Adonis.group.tmp group > {log} 2>&1
 
-        #根据首列去重, 实际只是去除了重复的表头
+        # 根据首列去重, 实际只是去除了重复的表头
         cat {output}/beta_Adonis.*.tmp | \
             awk '!a[$1]++' > {output}/beta_Adonis.tsv && \
             rm -rf {output}/beta_Adonis.*.tmp >> {log} 2>&1
