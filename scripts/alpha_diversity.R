@@ -9,8 +9,8 @@ diversityfile <- args[2]
 DivTag  <- args[3]
 outprefix <- args[4]
 
-outpng <- paste(outprefix, ".", DivTag, ".png", sep="")
-outpdf <- paste(outprefix, ".", DivTag, ".pdf", sep="")
+outpng <- paste0(outprefix, ".", DivTag, ".png")
+outpdf <- paste0(outprefix, ".", DivTag, ".pdf")
 print(outpng)
 print(outpdf)
 
@@ -32,8 +32,9 @@ MetaData <- read.table(metafile,
 # 按照左侧AlphaData行号合并MetaFata
 data <- merge(AlphaData, MetaData, by="row.names", all.x = T)
 # 筛选异常值
-data <- data %>% as.data.frame() %>% filter(visitPoints != c("提前终止"))
-data$Group <- paste(data$group, data$visitPoints, sep="-")
+# data <- data %>% as.data.frame() %>% filter(visitPoints != c("提前终止"))
+# data$Group <- paste(data$group, data$visitPoints, sep="-")
+data$Group <- data$group
 data$DrawValue <- data[[DivTag]]
 head(data)
 

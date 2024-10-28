@@ -3,6 +3,7 @@ rule picrust2_pipeline:
         seqs_fa=rules.dada2_rename_rep_seqs.output.re_rep_seqs_fa,
         otu_tsv=rules.diversity_core_export.output
     output:
+        fdir=directory('function'),
         pdir=directory('function/picrust2_out'),
         pathway_tsv='function/picrust2_out/path_abun_unstrat.tsv'
     benchmark:
@@ -15,11 +16,11 @@ rule picrust2_pipeline:
         config['conda']['qiime2']
     shell:
         """
-        grep -v "^# Constructed from biom file" {input.otu_tsv} > {output.pdir}/picrust2.otu.input 2> {log}
+        grep -v "^# Constructed from biom file" {input.otu_tsv} > {output.fdir}/picrust2.otu.input 2> {log}
         if [ -d "{output.pdir}" ];then
             rm -rf {output.pdir}
         fi
-        picrust2_pipeline.py -s {input.seqs_fa} -i {output.pdir}/picrust2.otu.input \
+        picrust2_pipeline.py -s {input.seqs_fa} -i {output.fdir}/picrust2.otu.input \
             -o {output.pdir} -p {threads} >> {log} 2>&1
         gunzip -dc {output.pdir}/pathways_out/path_abun_unstrat.tsv.gz > {output.pathway_tsv} 2>> {log}
         """

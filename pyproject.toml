@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "kml-16s-2"
-version = "0.1.0"
+version = "0.1.1"
 description = "KM DJH 16S 分析流程"
 authors = ["Kristoff <kr1stoff7m@gmail.com>"]
 readme = "README.md"

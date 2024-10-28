@@ -189,6 +189,8 @@ rule taxa_barplot_R:
         '.log/taxa/taxa_barplot_R_{levels}.log'
     conda:
         config['conda']['microplot']
+    wildcard_constraints:
+        levels='(Kingdom)|(Phylum)|(Class)|(Order)|(Family)|(Genus)|(Species)'
     shell:
         """
         mkdir -p {output.img_dir}
@@ -215,6 +217,8 @@ rule krona_plot:
         '.log/taxa/{sample}_krona_plot_{levels}.log'
     conda:
         config['conda']['microplot']
+    wildcard_constraints:
+        levels='(Kingdom)|(Phylum)|(Class)|(Order)|(Family)|(Genus)|(Species)'
     shell:
         """
         python {config[my_scripts]}/table_to_krona_input.py {input} {wildcards.sample} > {output.krona_input} 2> {log}
@@ -238,6 +242,8 @@ rule heatmap_hclust2_plot:
         '.log/taxa/heatmap_hclust2_plot_{levels}.log'
     conda:
         config['conda']['graphlan']
+    wildcard_constraints:
+        levels='(Kingdom)|(Phylum)|(Class)|(Order)|(Family)|(Genus)|(Species)'
     params:
         f_dist_f='braycurtis',#特征值绘制树/聚类方法
         s_dist_f='braycurtis',#样本绘制树/聚类方法
@@ -290,6 +296,8 @@ rule graphlan_plot:
         '.log/taxa/hgraphlan_plot_{levels}.log'
     conda:
         config['conda']['graphlan']
+    wildcard_constraints:
+        levels='(Kingdom)|(Phylum)|(Class)|(Order)|(Family)|(Genus)|(Species)'
     shell:
         """
         python {config[my_scripts]}/table_to_graphlan_input.py \

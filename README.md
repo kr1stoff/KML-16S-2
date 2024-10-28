@@ -11,3 +11,7 @@
 ```
  poetry run -C KML-16S-2 python KML-16S-2/main.py -i KML-16S-2/template/sample_table.tsv -o 24091902
 ```
+
+## 更新
+
+- 241028 修复部分图片结果没生成
