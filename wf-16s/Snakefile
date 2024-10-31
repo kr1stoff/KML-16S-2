@@ -79,8 +79,6 @@ rule all:
         'function/picrust2_plot',
         'function/picrust2_out'
 
-        # FIXME 很多图片结果需要指定输出
-
 
 include: 'rules/qc_fastqc.smk'
 include: 'rules/qc_multiqc.smk'
